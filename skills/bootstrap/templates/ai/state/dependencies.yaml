@@ -1,0 +1,7 @@
+# Cross-item dependency edges beyond what items carry inline, plus external
+# dependencies (vendor decisions, human approvals, third-party launches).
+# /health checks these edges for cycles, dangling IDs, and closed-but-blocking.
+edges: []
+# - {from: ENG-155, on: ENG-142, kind: hard}   # kind: hard | soft
+external: []
+# - {id: EXT-1, waiting_on: "Auth0 org plan approval", blocks: [ENG-142]}

@@ -1,0 +1,7 @@
+# Ordered list of what matters now. Humans edit this freely; /reconcile
+# re-reads it before every dispatch decision. Keep it under ~7 entries.
+priorities: []
+# - id: P-1
+#   statement: Ship org-scoped auth end to end
+#   why: unblocks first paying customer
+#   work_items: [ENG-142, DOC-81]

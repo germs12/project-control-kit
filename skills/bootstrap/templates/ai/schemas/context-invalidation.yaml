@@ -1,0 +1,33 @@
+# Schema: Context Invalidation — cache invalidation for agents.
+# Written by /impact (usually inside /reconcile) to
+# .ai/invalidations/<INV-id>--<lease-id>.yaml the moment a change affects work
+# that is currently in progress. Workers must check this directory at start and
+# again in /finish-work; Project Control also surfaces it when steering a
+# running worker. Acknowledged notices are archived by /reconcile.
+#
+# id:                   INV-<number>
+# lease:                lease ID being interrupted
+# work_item:            the in-flight item affected
+# issued:               ISO timestamp
+# triggered_by:         decision ID or envelope filename that caused this
+# what_changed:         plain statement of the change
+# authoritative_state:  pointers to current truth (decision IDs, files)
+# invalid_assumptions:  the worker's assumptions that no longer hold
+# must_reconsider:      concrete re-checks required before continuing
+# acknowledged:         null until the worker reports handling it in an envelope
+# ---------------------------------------------------------------- example:
+id: INV-007
+lease: L-029
+work_item: ENG-117
+issued: 2026-08-28T15:40:00Z
+triggered_by: AUTH-021
+what_changed: API tokens are now organization-scoped.
+authoritative_state:
+  - decisions/active/AUTH-021.yaml
+invalid_assumptions:
+  - API tokens belong to individual users.
+must_reconsider:
+  - Re-read AUTH-021.
+  - Re-evaluate token lookup in middleware against org scoping.
+  - Report in your envelope whether existing work must change.
+acknowledged: null

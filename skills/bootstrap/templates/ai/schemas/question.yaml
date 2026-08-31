@@ -1,0 +1,35 @@
+# Schema: Question (entries in .ai/state/questions.yaml under `questions:`)
+# The raw queue. /questions dedupes, merges questions that share an underlying
+# decision, and renders the human-facing digest to .ai/INBOX.md.
+#
+# id:             Q-<number>
+# status:         open | answered | withdrawn | merged_into:<id>
+# kind:           blocking | assumption
+#                 blocking  = low reversibility or high cost-if-wrong; work stops.
+#                 assumption = work proceeds under a logged, reversible assumption.
+# question:       the decision needed, phrased as a choice where possible
+# context:        1-3 lines of why this matters
+# affected_work:  work-item IDs
+# blocking:       subset of affected_work actually stopped by this
+# options:        [{key, label, recommended: bool}] — recommend when responsible
+# consequences_of_delay: one line
+# assumption:     if kind=assumption: {id: A-<n>, text, reversibility, cost_if_wrong}
+# asked_by:       agent name or envelope file
+# answer:         filled by /questions when the human decides {choice, notes, decided_at}
+# resulting_decision: decision ID created from the answer
+# ---------------------------------------------------------------- example:
+id: Q-81
+status: open
+kind: blocking
+question: How do email domains map to organizations?
+context: Four active work items need domain-ownership semantics before proceeding.
+affected_work: [ENG-41, ENG-52, ENG-61, DOC-19]
+blocking: [ENG-52, ENG-61]
+options:
+  - {key: A, label: One domain per organization, recommended: false}
+  - {key: B, label: Multiple domains; globally unique ownership, recommended: true}
+  - {key: C, label: Multiple domains; overlapping ownership allowed, recommended: false}
+consequences_of_delay: Two engineering items idle; org onboarding design frozen.
+asked_by: engineer (ENG-52--2026-08-28T14-10Z.yaml)
+answer: null
+resulting_decision: null

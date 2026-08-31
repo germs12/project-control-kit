@@ -1,0 +1,35 @@
+# Schema: Decision Record
+# One file per accepted decision in .ai/decisions/active/<ID>.yaml
+# Filename = ID. Prefix by topic (AUTH-, ARCH-, DATA-, UX-, MKT-, ...) + number.
+# Decisions are immutable once accepted; to change one, create a successor that
+# `supersedes` it, and /reconcile moves this file to .ai/decisions/superseded/.
+#
+# id:            string, unique, e.g. AUTH-014
+# title:         short noun phrase
+# status:        active | superseded  (superseded records live in ../superseded/)
+# decision:      the accepted truth, 1-3 sentences, present tense
+# rationale:     ONE line. The debate lives in the archive, not here.
+# consequences:  list — concrete obligations this creates
+# affects:       list of work-item IDs known affected at acceptance time
+# supersedes:    list of decision IDs this replaces (may be empty)
+# source:        provenance pointers (issue #, PR #, slack thread, envelope file)
+# decided_by:    human | project-control | worker proposal accepted by human
+# decided_at:    ISO date
+# ---------------------------------------------------------------- example:
+id: AUTH-014
+title: Authentication architecture
+status: active
+decision: >
+  Use Auth0 for customer authentication.
+rationale: Fastest path to SSO + MFA without owning credential storage.
+consequences:
+  - Remove planned native password authentication.
+  - API users authenticate using OAuth access tokens.
+  - Admin impersonation must use Auth0 organizations.
+affects: [ENG-44, ENG-58, DOC-12, MKT-19]
+supersedes: [AUTH-009]
+source:
+  github_issue: 144
+  slack_thread: abc123
+decided_by: human
+decided_at: 2026-08-28

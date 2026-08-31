@@ -1,0 +1,9 @@
+{
+  "name": "project-control",
+  "description": "An agent operating system for Claude Code: a Project Control coordinator plus worker agents under a lease → context slice → Change Envelope → reconcile protocol. Decisions as immutable records, one human inbox, context invalidation for in-flight work, meeting intake, and coherence audits.",
+  "version": "0.2.0",
+  "author": { "name": "germs12" },
+  "repository": "https://github.com/germs12/project-control-kit",
+  "license": "MIT",
+  "keywords": ["orchestration", "agents", "project-management", "skills", "meetings"]
+}

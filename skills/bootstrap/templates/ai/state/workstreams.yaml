@@ -1,0 +1,9 @@
+# Workstreams map to worker agents and to work-item ID prefixes.
+workstreams:
+  engineering:  {prefix: ENG,  agent: engineer}
+  product:      {prefix: PROD, agent: product}
+  qa:           {prefix: QA,   agent: qa}
+  documentation: {prefix: DOC, agent: docs-writer}
+  marketing:    {prefix: MKT,  agent: marketing}
+  research:     {prefix: RES,  agent: researcher}
+  hygiene:      {prefix: HYG,  agent: librarian}

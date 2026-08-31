@@ -1,0 +1,35 @@
+# Schema: Work Item (entries in .ai/state/work-items.yaml under `items:`)
+# The reconciled index. If a tracker (Linear / GitHub Issues) is connected, the
+# tracker is authoritative for status/priority/assignee and this index mirrors
+# them, adding the coordination fields trackers don't model.
+#
+# id:            workstream prefix + number, e.g. ENG-142, MKT-21, DOC-81
+# external_ref:  tracker pointer, e.g. {github_issue: 57} or {linear: ABC-123}
+# title:         short imperative phrase
+# status:        backlog | queued | in_progress | review | done | reopened | dropped
+# priority:      p0 | p1 | p2 | p3
+# workstream:    key from state/workstreams.yaml
+# touches:       concept tags used for impact analysis and lease-conflict checks.
+#                Keep them coarse and consistent (authentication, billing, api, ...)
+# depends_on:    work-item IDs that must land first
+# blocks:        inverse convenience list (reconcile keeps it consistent)
+# decisions:     active decision IDs a worker must load for this item
+# acceptance:    list of checkable outcomes
+# questions:     open question IDs attached to this item
+# notes:         short; anything longer belongs in the item's tracker body
+# ---------------------------------------------------------------- example:
+id: ENG-142
+external_ref: {github_issue: 57}
+title: Add organization-scoped API tokens
+status: in_progress
+priority: p1
+workstream: engineering
+touches: [authentication, api, organizations]
+depends_on: [ENG-131]
+blocks: [ENG-155, DOC-81]
+decisions: [AUTH-014]
+acceptance:
+  - Tokens are created under an organization, not a user
+  - Legacy user tokens return a deprecation error
+questions: []
+notes: ""

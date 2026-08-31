@@ -1,0 +1,26 @@
+# Schema: Lease (entries in .ai/state/leases.yaml under `leases:`)
+# A lease is how Project Control knows who owns what, whom to notify when reality
+# changes, and which context version a worker started from. No lease, no work.
+# /start-work creates it; /reconcile releases it.
+#
+# id:               L-<number>
+# work_item:        work-item ID
+# agent:            worker agent name
+# state:            active | finishing | released | expired
+# started:          ISO timestamp
+# context_version:  integer copied from .ai/state/current.md at lease time.
+#                   Reconcile compares this to detect drift.
+# touches:          copied from the work item; used for conflict detection —
+#                   two active leases sharing a touch concept = serialize or warn.
+# brief:            one line describing the dispatched scope
+# invalidations_acknowledged: list of INV IDs the worker has confirmed processing
+# ---------------------------------------------------------------- example:
+id: L-031
+work_item: ENG-142
+agent: engineer
+state: active
+started: 2026-08-28T14:02:00Z
+context_version: 481
+touches: [authentication, organizations, api]
+brief: Implement org-scoped API tokens per AUTH-014.
+invalidations_acknowledged: []

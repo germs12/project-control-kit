@@ -1,0 +1,12 @@
+{
+  "name": "germs12",
+  "owner": { "name": "germs12" },
+  "plugins": [
+    {
+      "name": "project-control",
+      "source": "./",
+      "description": "Agent operating system: Project Control coordinator, 7 worker agents, 9 skills (incl. /intake for meeting ingestion), schemas, and a versioned project-state data plane.",
+      "category": "productivity"
+    }
+  ]
+}

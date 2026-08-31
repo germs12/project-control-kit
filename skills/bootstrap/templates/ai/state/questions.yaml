@@ -1,0 +1,5 @@
+# Raw question queue. Schema + example: ../schemas/question.yaml
+# Workers append via envelopes; /questions merges, renders .ai/INBOX.md,
+# and writes answers back here before turning them into decisions.
+next_id: 1
+questions: []

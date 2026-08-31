@@ -1,0 +1,4 @@
+# Reconciled work index. Schema + example: ../schemas/work-item.yaml
+# Single writer: Project Control (/reconcile, /bootstrap).
+next_ids: {}   # e.g. {ENG: 1, PROD: 1, DOC: 1, MKT: 1, QA: 1, RES: 1}
+items: []

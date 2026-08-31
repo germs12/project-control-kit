@@ -1,0 +1,42 @@
+name: validate
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Frontmatter, YAML, JSON, and size checks
+        run: |
+          pip install pyyaml --quiet
+          python3 - << 'PY'
+          import json, pathlib, re, sys, yaml
+          fail = 0
+          def check_fm(p):
+              global fail
+              t = p.read_text()
+              m = re.match(r"^---\n(.*?)\n---\n", t, re.S)
+              if not m: print(f"FAIL {p}: no frontmatter"); fail = 1; return
+              try:
+                  fm = yaml.safe_load(m.group(1))
+                  assert fm.get("name") and fm.get("description")
+              except Exception as e:
+                  print(f"FAIL {p}: {e}"); fail = 1; return
+              n = len(t.splitlines())
+              if n >= 500: print(f"FAIL {p}: {n} lines (limit 500)"); fail = 1
+              else: print(f"OK   {p} ({n} lines)")
+          for p in sorted(pathlib.Path("skills").glob("*/SKILL.md")): check_fm(p)
+          for p in sorted(pathlib.Path("agents").glob("*.md")): check_fm(p)
+          for p in sorted(pathlib.Path("skills/bootstrap/templates/ai").rglob("*.yaml")):
+              try: yaml.safe_load(p.read_text()); print(f"OK   {p}")
+              except Exception as e: print(f"FAIL {p}: {e}"); fail = 1
+          pj = json.load(open(".claude-plugin/plugin.json"))
+          mj = json.load(open(".claude-plugin/marketplace.json"))
+          assert any(pl["name"] == pj["name"] for pl in mj["plugins"]), \
+              "marketplace.json does not list the plugin from plugin.json"
+          print("OK   manifests")
+          sys.exit(fail)
+          PY
+      - name: Installer syntax
+        run: sh -n install.sh && echo "OK   install.sh"

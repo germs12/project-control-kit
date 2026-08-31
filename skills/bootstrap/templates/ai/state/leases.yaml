@@ -1,0 +1,5 @@
+# Active work leases. Schema + example: ../schemas/lease.yaml
+# /start-work appends; /reconcile releases. Two active leases sharing a
+# `touches` concept is a conflict warning — serialize or split the scope.
+next_id: 1
+leases: []

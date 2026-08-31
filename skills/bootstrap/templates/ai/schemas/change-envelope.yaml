@@ -1,0 +1,66 @@
+# Schema: Change Envelope — the worker's transaction commit.
+# Written by /finish-work to .ai/envelopes/pending/<work-item>--<UTC-timestamp>.yaml
+# and consumed by /reconcile. No envelope, no completion. Empty sections must be
+# present and empty ([]), not omitted — absence of impact is a claim, so make it
+# explicitly.
+#
+# work_item:              ID being reported on
+# lease:                  lease ID from state/leases.yaml
+# agent:                  worker agent name
+# status:                 completed | partial | blocked | abandoned
+# summary:                1-2 sentences of what happened
+# changes:
+#   code:                 files/systems touched
+#   behavior:             externally visible behavior changes, stated plainly
+#   interfaces:           API/contract/schema changes
+# decisions_created:      proposed decision records (inline, decision-schema shape)
+# assumptions_introduced: assumptions logged to proceed (id, text, reversibility, cost)
+# assumptions_invalidated: prior truths this work broke, stated plainly
+# affected_work:
+#   confirmed:            work-item IDs definitely affected
+#   possible:             work-item IDs to review for impact
+# documentation_impacts:  what docs must change and how
+# questions:              question-schema-shaped entries for the human queue
+# discovered_work:        new work found but NOT done (title, why, suggested priority)
+# cleanup:                artifacts this change obsoleted; name them for archival
+# verification:           checks run and their results
+# ---------------------------------------------------------------- example:
+work_item: ENG-142
+lease: L-031
+agent: engineer
+status: completed
+summary: >
+  Added organization-scoped API tokens; user-level tokens deprecated.
+changes:
+  code:
+    - app/models/api_token.rb
+    - app/controllers/api/tokens_controller.rb
+  behavior:
+    - API tokens now belong to organizations.
+    - User-level API tokens are no longer supported.
+  interfaces:
+    - POST /api/tokens now requires organization_id
+decisions_created:
+  - id: AUTH-021
+    title: API tokens are organization-scoped
+    decision: All API tokens belong to an organization; user tokens are deprecated.
+assumptions_introduced: []
+assumptions_invalidated:
+  - API tokens belong to users.
+affected_work:
+  confirmed: [ENG-155, DOC-81]
+  possible: [MKT-21]
+documentation_impacts:
+  - Authentication guide must change.
+  - API token examples must include organization_id.
+questions:
+  - id: Q-112
+    kind: assumption
+    question: Should existing personal tokens be migrated or expired?
+discovered_work: []
+cleanup:
+  - Delete old personal-token design document (docs/design/personal-tokens.md).
+  - Mark AUTH-017 superseded.
+verification:
+  - tests_passed
+  - lint_passed

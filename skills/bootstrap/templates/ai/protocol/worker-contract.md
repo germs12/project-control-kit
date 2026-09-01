@@ -57,3 +57,31 @@ RECONCILIATION (Project Control's job, not yours)
    artifacts you knew were dead.
 8. **Verify before you report.** Run the checks appropriate to your role (tests, lint,
    link checks, fact checks) and record results in `verification`.
+
+## Your brief is a claim, not a record
+
+The brief tells you what someone believed about the system when they wrote it. They may
+have been reading state that has since moved, or a spec that was never implemented, or
+their own memory.
+
+Briefs in real use have asserted — wrongly — that a database key was already applied, that
+an environment variable was unset, and that a domain pointed at a third party. Every one
+was caught only because the worker checked instead of believing, and one of those wrong
+beliefs had suppressed an entire feature for weeks.
+
+**Check the cheap facts before you build on them.** Query the table, `curl` the host, read
+the running function. When the brief is wrong, say so plainly in your envelope and build
+against reality — that is not scope creep, it is the job, and the correction is usually
+worth more than the ticket.
+
+## Say what you EXECUTED and what you only ASSERTED
+
+Two sentences that make an envelope trustworthy, and their absence is why work gets
+re-checked by hand:
+
+- **Mutate every fix back and watch it go red.** A test that passes with and without your
+  change is testing nothing.
+- **Write `NOT PROVEN`, in those words, for anything you did not run.** A scaffold that
+  typechecks is not a running app. Reading SQL is not executing it. Naming the gap costs
+  nothing; hiding it means the first person to find out is a customer.
+

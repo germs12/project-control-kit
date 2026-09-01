@@ -69,7 +69,7 @@ cd /path/to/your/repo && claude
                      plugin skills also answer to /project-control:<skill>)
 ```
 
-Either way, `/bootstrap` scans the repo, drafts PROJECT.md, detects adapters
+`/bootstrap` scans the repo, drafts PROJECT.md, **detects which tracker the team actually uses** (see operations.md § *Finding the tracker* — being on GitHub is not evidence of GitHub Issues), **imports its open items as work items**
 (`gh`, Linear/Slack MCP), imports open issues as work items, turns its guesses
 into inbox questions instead of fabricating intent, and finishes with `/health`
 and your first `/status`. Commit `.ai/` — state travels with the repo.
@@ -130,7 +130,7 @@ provisionally out of sync, and both `/status` and `/health` nag about it.
 
 Very welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). The roadmap wants:
 `/triage`, `/plan`, `/sweep`, `/release` skills; architecture and release
-agents; a single-writer enforcement hook; fleshed-out Linear/Slack adapters;
+agents; a single-writer enforcement hook; fleshed-out adapters for more trackers and chat tools;
 more `/intake` fixtures (see [`examples/`](examples/)).
 
 ## License

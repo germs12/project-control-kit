@@ -12,7 +12,9 @@
 # consequences:  list — concrete obligations this creates
 # affects:       list of work-item IDs known affected at acceptance time
 # supersedes:    list of decision IDs this replaces (may be empty)
-# source:        provenance pointers (issue #, PR #, slack thread, envelope file)
+# source:        provenance pointers (tracker_ref, PR/MR, chat thread, envelope file).
+#                `tracker_ref` uses the same shape as a work item's `external_ref` — the
+#                key names the tool — so one concept has one shape across both schemas.
 # decided_by:    human | project-control | worker proposal accepted by human
 # decided_at:    ISO date
 # ---------------------------------------------------------------- example:

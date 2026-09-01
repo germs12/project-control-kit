@@ -23,7 +23,10 @@
 # notes:         short; anything longer belongs in the item's tracker body
 # ---------------------------------------------------------------- example:
 id: ENG-142
-external_ref: {linear: ENG-123}   # or {github_issue: 57}, {jira: PROJ-456}, or omit
+external_ref: {jira: PROJ-456}    # or {github_issue: 57}, {linear: ABC-123}, or omit.
+                                  # NOTE the deliberately different prefix: a foreign id
+                                  # that looks like a local one (ENG-142 vs ENG-123) is how
+                                  # tracker detection goes wrong — see operations.md.
 title: Add organization-scoped API tokens
 status: in_progress
 priority: p1

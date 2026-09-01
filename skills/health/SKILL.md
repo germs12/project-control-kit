@@ -34,6 +34,26 @@ Decisions
 - no active work item, state file, or doc references a superseded decision ID
 - every decision in `decisions/superseded/` has `status: superseded`
 
+Decision debt — the two checks that catch reconcile failing silently
+- **every processed envelope's `decisions_created` resolves to a file.** Reconcile's
+  contract is: write each accepted decision, THEN move the envelope. Doing the second
+  without the first is silent and total — the envelope looks done and the reasoning is
+  gone. In one project this found **45 dropped proposals across 18 envelopes**, and it
+  was noticed at all only because two of those ids had shipped in code and one was inside
+  a migration's `raise` message running in production.
+- **every decision id cited in the source tree resolves to a record.** Grep
+  `lib/ app/ components/ supabase/ docs/ tests/` for `<PREFIX>-###` and check it exists.
+  This one finds only what something happens to cite — 2 of those 45 — so it complements
+  the check above rather than replacing it. Ids a document mentions in order to say they
+  are UNALLOCATED need an allowlist, and every entry must re-earn its place: if one later
+  gets a record, the stale entry fails.
+
+  When either fires, **look in the processed envelope before writing anything.** The
+  original proposal is still there. Reconstructing a record from the places that cite it
+  produces a confidently WRONG rule, because a citation usually names a decision's
+  CONSEQUENCE rather than the decision — observed twice, once caught only by recovering
+  the original.
+
 Envelopes & invalidations
 - `.ai/envelopes/pending/` is empty (anything sitting there is unreconciled work)
 - every unacknowledged invalidation's lease is still active — and no in-flight item

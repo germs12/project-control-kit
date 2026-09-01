@@ -102,33 +102,27 @@ and quoted. Then offer — don't assume — to also file action items wherever t
 team already tracks work.
 
 **Find the tracker; don't pick one.** We are helping here, not creating new
-workflows and processes. Being hosted on GitHub is not evidence that a team
-uses GitHub Issues — plenty of repos on GitHub run Linear, Jira, Shortcut or
-Asana. Work down the evidence, strongest first, and stop when it's clear:
+workflows and processes. **The procedure lives in one place —
+`.ai/protocol/operations.md` § *Finding the tracker*** — so `/bootstrap`, `/reconcile`
+and this skill cannot drift into three answers for one repo. Read it there; the short
+version is that you check whether it has already been answered, then whether Project
+Control's own index IS the tracker, then the evidence, and you **stop at the first step
+that answers**.
 
-1. **Commit and branch history** — what the team does rather than what they
-   have, which is why it beats everything below. `git log --oneline -50` and
-   `git branch -r`: do real subjects and branches carry `ENG-123` / `PROJ-456`
-   (Linear, Jira, Shortcut) or `#123` (GitHub/GitLab)?
-2. **Connected tools** — an available Linear / Jira / Asana / Notion
-   integration is strong evidence, and stronger than `gh` being authenticated,
-   which is true on nearly every developer's machine regardless of where the
-   team tracks work.
-3. **What the repo says about itself** — CONTRIBUTING.md, the pull-request
-   template, README links, an issue-template directory present or
-   conspicuously absent.
-4. **Files in the tree** — `TODO.md`, `docs/TASKS.md`, or a `.ai/` directory
-   (that last one is Project Control mode, above).
+Two things that bite here specifically: **being on GitHub is not evidence of GitHub
+Issues**, and **`#123` in a commit subject is the pull-request number**, so it says
+nothing about the tracker.
 
-Report the evidence, not the conclusion: "recent branches are `eng-*` and
-commits cite `ENG-###`, so this looks like Linear — confirm?" can be corrected
-in one word; "filed 6 issues in GitHub" cannot. **Never create a tracker, and
-never file the first issue into one nobody uses.** A wrong guess here doesn't
-misfile a ticket, it starts a parallel system the team now has to ignore or
-clean up — so when the evidence is thin or contradictory, say what you found
-and ask. Then record the answer and its evidence under Notable context in the
-distillation, so the next run reuses it instead of re-interrogating the repo
-and possibly deciding differently. Use whatever tooling is already present to
+If the project has no `.ai/` at all — standalone mode — the same ordering applies from
+step 2 down, and the distillation file records what you found so a second run reuses it.
+
+Report the evidence, not the conclusion: "recent branches are `eng-*` and commits cite
+`ENG-###`, so this looks like Linear — confirm?" can be corrected in one word; "filed 6
+issues in GitHub" cannot. **Never create a tracker, and never file the first issue into
+one nobody uses.** A wrong guess doesn't misfile a ticket, it starts a parallel system
+the team now has to ignore — so when the evidence is thin, say what you found and ask.
+
+Use whatever tooling is already present to
 do the filing; intake finds the tracker, it doesn't reimplement it.
 
 Both modes mint ids and cite them. Both modes therefore owe:

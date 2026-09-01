@@ -33,9 +33,15 @@ Everything you write here is ordinary state that `/reconcile` maintains afterwar
    actively changing; CI config; existing TODO/FIXME density. Goal: what is this,
    who is it for, what stack, what state is it in. Minutes, not an archaeology dig.
 
-2. **Detect adapters** per `.ai/protocol/operations.md`: `gh auth status` for
-   GitHub (note the remote's owner/repo); look for Linear and Slack MCP tools.
-   Record what's connected in PROJECT.md's canonical-information section.
+2. **Detect adapters** per `.ai/protocol/operations.md` § *Finding the tracker*, and
+   note the distinction that section turns on: **the git host and the tracker are
+   different questions.** A repo on GitHub may well track work in Linear or Jira, and
+   `gh auth status` succeeding proves only that a CLI is installed.
+   So lead with what the team DOES — the id shape in `git log --oneline -50` and
+   `git branch -r` — then connected integrations, then what the repo says about itself.
+   Record what you found **and the evidence for it** in PROJECT.md's
+   canonical-information section, so the next run reuses the answer rather than
+   re-deriving it and possibly differing.
 
 3. **Draft PROJECT.md** — the 30-60-second version. One paragraph of what we're
    building; who it's for; 3-5 "what currently matters" bullets; hard architectural
@@ -46,8 +52,10 @@ Everything you write here is ordinary state that `/reconcile` maintains afterwar
 4. **Propose workstreams.** Start from `.ai/state/workstreams.yaml` defaults; drop
    what this project clearly doesn't need yet, and say why.
 
-5. **Seed work items.** Sources, in order: open GitHub issues (`gh issue list`) or
-   Linear issues → import with `external_ref`; TODO/FIXME clusters worth tracking;
+5. **Seed work items.** Sources, in order: open items from **whichever tracker step 2
+   identified** → import with `external_ref` (`gh issue list`, `glab issue list`, the
+   tracker's MCP tool — whatever that repo actually uses); TODO/FIXME clusters worth
+   tracking;
    obvious gaps you found (no tests, no CI, stale README). For each: schema-complete
    entry with honest `touches` and a suggested priority. Cap the initial import at
    ~25 items; note the remainder as a follow-up HYG item rather than flooding the

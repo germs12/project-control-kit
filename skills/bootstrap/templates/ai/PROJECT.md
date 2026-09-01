@@ -20,7 +20,9 @@
 
 ## Where is canonical information?
 - Decisions: `.ai/decisions/active/`
-- Work index: `.ai/state/work-items.yaml` (tracker: <none | GitHub Issues | Linear ...>)
+- Work index: `.ai/state/work-items.yaml`
+  (tracker: <none — this index IS the tracker | Linear | Jira | GitHub Issues | ...>,
+   detected from: <the evidence, e.g. "branches are eng-*, commits cite ENG-###">)
 - Current focus + context version: `.ai/state/current.md`
 - Authority table: `.ai/protocol/operations.md`
 

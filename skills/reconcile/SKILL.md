@@ -116,7 +116,8 @@ This happened THREE TIMES in one session. Twice it was caught by `/health` repor
 cited did not exist on disk. Each recovery meant `git log --all --grep`, finding the orphan, and
 re-applying it by hand onto the current base.
 
-The fix is one step and it costs nothing: **`gh pr create` immediately after the dispatch push**,
+The fix is one step and it costs nothing: **open the pull request immediately after the dispatch
+push** — `gh pr create`, `glab mr create`, whatever this repo uses —
 before invoking the worker. A state-only PR merges in minutes and the registration is on `main`
 before the worker's first commit. If a dispatch is genuinely too small for its own PR, fold it into
 the reconcile branch you are already going to open — but never leave it on a branch you are about
@@ -168,7 +169,7 @@ Registering a work item, a decision or a lease is an INSERT, not an upsert. If t
 already taken, **stop and renumber** — never overwrite, and never "de-duplicate" by
 keeping one block and dropping the other. A reconcile did exactly that: a new hygiene
 ticket was registered over an existing `HYG-1`, a tidy-up pass kept the newer block, and a
-real work item tracking nine unimported GitHub issues vanished from the index with nothing
+real work item tracking nine unimported tracker issues vanished from the index with nothing
 pointing at the hole. It was found only because a librarian diffed the index against the
 previous commit.
 

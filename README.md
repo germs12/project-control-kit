@@ -27,7 +27,7 @@ whole idea. This kit attacks exactly that.
                         │
                    RECONCILE  ──▶  update queued work · invalidate in-flight
                         │          context · supersede decisions · archive
-              GitHub / Linear / Slack      (projections, not truth)
+        your git host / tracker / chat     (projections, not truth)
 ```
 
 ## What's inside
@@ -69,7 +69,7 @@ cd /path/to/your/repo && claude
                      plugin skills also answer to /project-control:<skill>)
 ```
 
-Either way, `/bootstrap` scans the repo, drafts PROJECT.md, detects adapters
+`/bootstrap` scans the repo, drafts PROJECT.md, **detects which tracker the team actually uses** (see operations.md § *Finding the tracker* — being on GitHub is not evidence of GitHub Issues), **imports its open items as work items**
 (`gh`, Linear/Slack MCP), imports open issues as work items, turns its guesses
 into inbox questions instead of fabricating intent, and finishes with `/health`
 and your first `/status`. Commit `.ai/` — state travels with the repo.
@@ -112,7 +112,7 @@ logged assumptions. You answer once; N agents update.
 (once) and `/health` (audit). Every task gets a Work Brief ending in
 `Everything else: DO NOT LOAD.` 30 tickets or 3,000 — same per-task context.
 
-**Tools are projections.** GitHub is authoritative for code, the tracker for
+**Tools are projections.** The git host is authoritative for code, the tracker for
 lifecycle, chat for conversation, `.ai/` for reconciled truth. Skills speak
 tool-agnostic operations; swap GitHub+Linear+Slack for GitLab+Jira+Teams by
 editing one adapter table (`templates/ai/protocol/operations.md`).
@@ -130,7 +130,7 @@ provisionally out of sync, and both `/status` and `/health` nag about it.
 
 Very welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). The roadmap wants:
 `/triage`, `/plan`, `/sweep`, `/release` skills; architecture and release
-agents; a single-writer enforcement hook; fleshed-out Linear/Slack adapters;
+agents; a single-writer enforcement hook; fleshed-out adapters for more trackers and chat tools;
 more `/intake` fixtures (see [`examples/`](examples/)).
 
 ## License

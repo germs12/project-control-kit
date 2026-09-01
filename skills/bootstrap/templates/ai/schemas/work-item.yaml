@@ -1,10 +1,14 @@
 # Schema: Work Item (entries in .ai/state/work-items.yaml under `items:`)
-# The reconciled index. If a tracker (Linear / GitHub Issues) is connected, the
+# The reconciled index. If a tracker is connected — whichever one this repo uses;
+# see .ai/protocol/operations.md 'Finding the tracker' — the
 # tracker is authoritative for status/priority/assignee and this index mirrors
 # them, adding the coordination fields trackers don't model.
 #
 # id:            workstream prefix + number, e.g. ENG-142, MKT-21, DOC-81
-# external_ref:  tracker pointer, e.g. {github_issue: 57} or {linear: ABC-123}
+# external_ref:  tracker pointer. The key names the tool, so the index stays honest
+#                about where the truth lives: {linear: ENG-123}, {jira: PROJ-456},
+#                {github_issue: 57}, {shortcut: 4821}, or omitted when there is no
+#                tracker and this index IS the tracker.
 # title:         short imperative phrase
 # status:        backlog | queued | in_progress | review | done | reopened | dropped
 # priority:      p0 | p1 | p2 | p3
@@ -19,7 +23,7 @@
 # notes:         short; anything longer belongs in the item's tracker body
 # ---------------------------------------------------------------- example:
 id: ENG-142
-external_ref: {github_issue: 57}
+external_ref: {linear: ENG-123}   # or {github_issue: 57}, {jira: PROJ-456}, or omit
 title: Add organization-scoped API tokens
 status: in_progress
 priority: p1

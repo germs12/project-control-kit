@@ -5,7 +5,8 @@
 - `/intake` skill: ingest audio recordings, transcripts, and notes into project
   state — local Whisper transcription, attribution discipline ("suggested" ≠
   "decided"), human confirmation gate, provenance archive. Dual-mode: full
-  Project Control pipeline, or standalone dated records + optional GitHub issues.
+  Project Control pipeline, or standalone dated records + optional filing into
+  whichever tracker the repo already uses.
 - Plugin + marketplace packaging (`/plugin marketplace add germs12/project-control-kit`)
 - `/bootstrap` now self-scaffolds the `.ai/` data plane and CLAUDE.md managed
   block from bundled templates, making plugin installs self-sufficient

@@ -27,7 +27,7 @@ whole idea. This kit attacks exactly that.
                         │
                    RECONCILE  ──▶  update queued work · invalidate in-flight
                         │          context · supersede decisions · archive
-              GitHub / Linear / Slack      (projections, not truth)
+        your git host / tracker / chat     (projections, not truth)
 ```
 
 ## What's inside
@@ -112,7 +112,7 @@ logged assumptions. You answer once; N agents update.
 (once) and `/health` (audit). Every task gets a Work Brief ending in
 `Everything else: DO NOT LOAD.` 30 tickets or 3,000 — same per-task context.
 
-**Tools are projections.** GitHub is authoritative for code, the tracker for
+**Tools are projections.** The git host is authoritative for code, the tracker for
 lifecycle, chat for conversation, `.ai/` for reconciled truth. Skills speak
 tool-agnostic operations; swap GitHub+Linear+Slack for GitLab+Jira+Teams by
 editing one adapter table (`templates/ai/protocol/operations.md`).

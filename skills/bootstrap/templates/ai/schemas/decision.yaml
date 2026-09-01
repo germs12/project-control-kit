@@ -29,7 +29,7 @@ consequences:
 affects: [ENG-44, ENG-58, DOC-12, MKT-19]
 supersedes: [AUTH-009]
 source:
-  github_issue: 144
+  tracker_ref: {linear: ENG-144}   # or {github_issue: 144} — key names the tool
   slack_thread: abc123
 decided_by: human
 decided_at: 2026-08-28

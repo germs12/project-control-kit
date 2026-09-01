@@ -28,41 +28,51 @@ assumptions you just broke.
    note in the envelope which you reviewed.
 
 3. **Verify — and separate what you EXECUTED from what you ASSERTED.**
-   Run the checks appropriate to the work (tests, lint, typecheck, link checks, fact
-   checks). Record commands and results. If verification fails and you can't fix it in
-   scope, the envelope status is `partial` or `blocked` — never `completed`.
+   Run the checks appropriate to **your role and your tools**. Record commands and
+   results. If verification fails and you can't fix it in scope, the envelope status is
+   `partial` or `blocked` — never `completed`.
 
-   Three disciplines make the difference between an envelope that is trusted and one
-   that is re-checked by hand:
+   **A green suite is not evidence your change works.** Where it applies, mutate the fix
+   back and watch the test go red — a test that passes with and without your change is
+   testing nothing, and this is the most common way work "verified" by a worker turns out
+   not to be.
 
-   - **A green suite is not evidence your change works.** Mutate the fix back and watch
-     the test go red. A test that passes both with and without your change is testing
-     nothing, and this is the single most common way work "verified" by a worker turns
-     out not to be. Every behaviour you claim gets a negative control: remove the guard
-     and watch the leak; drop the constraint and watch both rows land; point the resolver
-     at the wrong implementation and watch it caught.
-   - **Say `NOT PROVEN`, in those words, for anything you did not execute.** Not "should
-     work", not silence. A scaffold that typechecks is not a running app; a bundle that
-     compiles is not a launched one; reading SQL is not running it. Naming the gap costs
-     you nothing and lets Project Control decide whether to close it — hiding it means
-     the first person to find out is a customer.
-   - **A ratchet nobody has watched fire is indistinguishable from one that cannot.**
-     If you add a guard, break something on purpose and show it catching that.
+   **Where it applies**, because stated as "always" it is wrong more often than right:
+   - **Behavioural fixes and new guards** — yes, and this is the case it was learned on.
+     Remove the clamp and watch the leak; drop the constraint and watch both rows land.
+   - **Refactors** — no. Behaviour is unchanged by definition, so mutating back leaves
+     everything green. The control is the opposite claim: the suite passes **unchanged**,
+     and you say which suite.
+   - **Deletions and cleanup** — no. "Mutate it back" means restoring the thing you were
+     asked to remove.
+   - **Config bumps, dependency upgrades, docs, research** — usually nothing to mutate.
+     Say what you did instead; do not manufacture a control.
+   - **Timing, flakiness and performance** — a mutation can pass by luck. Do not report a
+     lucky run as a control.
 
-4. **Verify the BRIEF, not just the work.** Your brief is a claim about the system, not
-   a record of it. It was written by someone reading state that may have moved, or a
-   spec that was never implemented, or their own memory.
+   **Mutate safely, and this is not optional.** Commit or stash your real work FIRST,
+   mutate in a scratch copy, and never leave a mutation staged. In this system a
+   mutation-test revert was once swept into a peer's commit, reinstating a claim another
+   agent had deliberately deleted for legal reasons. Reverting a security fix, even for
+   ten seconds, puts the vulnerability in a tree someone else may be reading.
 
-   In one project, briefs asserted — wrongly — that a database key was already applied,
-   that an environment variable was unset, and that a domain pointed at a third party.
-   Each was caught only because the worker checked instead of believing, and one of those
-   wrong beliefs had suppressed an entire feature for weeks. In each case the correction
-   was worth more than the ticket.
+   **Write `not_proven` entries, in the envelope's own field, for anything you did not
+   run.** Not "should work", not silence. A scaffold that typechecks is not a running app;
+   reading SQL is not executing it. **`not_proven` is not failure** — a role with no shell
+   is expected to have entries there and still file `completed`, because it verified
+   everything its tools allow. Naming the gap lets Project Control decide whether to close
+   it; hiding it means the first person to find out is a customer.
 
-   So: **cheap facts get checked.** Query the table, `curl` the host, read the running
-   function — before you build on the claim, not after. When you find the brief wrong,
-   say so plainly in the envelope and build against reality; that is not scope creep, it
-   is the job.
+4. **Report what the brief got wrong — don't re-litigate the ticket.**
+   You checked the brief's load-bearing claims before building (worker contract, step 3).
+   Anything that turned out false goes in `brief_corrections`, quoted, with what is
+   actually true and how you know.
+
+   **This is a REPORT, not a mandate to rebuild.** Rule 2 of the contract still holds:
+   stay inside your task scope. If the correction is small enough that building against
+   reality is obviously right, do it and say so. If it changes what the ticket is for,
+   **raise a `blocking` question instead and stop** — that is what the mechanism is for,
+   and it is cheaper than delivering something nobody asked for.
 
 5. **Write the envelope.** Fill `.ai/schemas/change-envelope.yaml` completely.
    Discipline points, because these fields are the whole system:
@@ -91,9 +101,14 @@ assumptions you just broke.
 
 ## Hard rules
 
+- `not_proven` entries do NOT make an envelope `partial`. A role with no shell files
+  `completed` with what it could not run named honestly. `partial` means a check that was
+  available to you failed or was skipped.
+
 - Never mark the work item done, release your own lease, or edit
   `.ai/state/` / `.ai/decisions/` — that is `/reconcile`'s job.
-- `status: completed` requires passing verification AND zero unprocessed
+- `status: completed` requires that every check available to YOUR ROLE passed, and
+  zero unprocessed
   invalidations addressed to you.
 - If you truly changed nothing (research, review), the envelope still exists —
   with empty change sections and its findings in `summary`/`questions`.

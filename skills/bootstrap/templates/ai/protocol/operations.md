@@ -113,29 +113,3 @@ Rules of engagement:
   points them at an external artifact.
 - When adding a new platform, add a column here and map the operations. Do not teach
   skills or agents vendor syntax.
-
-## If merges deploy, apply migrations BEFORE you merge
-
-Find out whether merging to the default branch deploys — by watching, not by reading the
-docs, because the two disagree more often than not. In one project the changelog said
-merges deploy automatically and the operations doc described batched deploys on the
-owner's say-so; ~30 observed deployments settled it in an afternoon.
-
-If merging deploys, then **the migration goes in first**. Merging code that reads a column
-that does not exist yet ships a broken product in the minutes before anyone notices, and
-the notice usually arrives as a customer.
-
-Two habits that cost nothing and have each caught a real one:
-
-- **Verify the destructive statements against real data first.** A migration that deletes
-  rows with no resolvable parent should be run against a count, not a hope. One such
-  DELETE turned out to affect zero rows — which is what made it safe to run, and was not
-  knowable without asking.
-- **Verify the object exists AFTER applying, by reading the catalog** — `pg_proc`,
-  `pg_policies`, `information_schema` — not by trusting the tool's success response.
-
-And audit for drift periodically, in both directions. A table-level diff misses a
-migration that only adds a function or a constraint: in one project three migrations had
-never been applied, two of them invisible to a table diff, and one would have refused
-every login the moment a dependent ticket merged.
-

@@ -56,6 +56,13 @@ Decision debt — the two checks that catch reconcile failing silently
 
 Envelopes & invalidations
 - `.ai/envelopes/pending/` is empty (anything sitting there is unreconciled work)
+- **no processed envelope has a `not_proven` entry that was never closed** — reconcile
+  step 4 must either have confirmed it against the running system or turned it into a
+  work item. An unproven claim that quietly became `done` is the defect this field exists
+  to prevent
+- **no `brief_corrections` entry died in its envelope** — each should have reached the
+  spec, decision record or work item that carried the false claim, or nothing was fixed
+  and the next brief repeats it
 - every unacknowledged invalidation's lease is still active — and no in-flight item
   was changed by a reconcile without an invalidation being issued
 - processed envelopes' `cleanup` entries were actually executed

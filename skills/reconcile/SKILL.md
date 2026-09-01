@@ -45,7 +45,19 @@ all `.ai/state/`, `.ai/decisions/`, and tracker-status writes happen here (and i
    substantive). Two live decisions on one topic is the same defect as two under one id:
    supersede, don't stack.
 
-4. **Propagate impact.** Run the `/impact` procedure over `changes.behavior`,
+4. **Read the envelope's `not_proven` and `brief_corrections` before you believe it.**
+   - `not_proven` lists what the worker did NOT execute. It is neither pass nor fail, so
+     it does not by itself block `done` — but **you** decide whether each entry can close.
+     Where the consequence is security, money, or another tenant's data, confirm it
+     against the running system before writing `done`, per the rule further down this
+     file. Anything you cannot close becomes a work item, not a shrug.
+   - `brief_corrections` lists claims the BRIEF made that turned out false. Treat each as
+     an `assumptions_invalidated` entry for impact purposes: the wrong belief is probably
+     also in a spec, a decision record, or the next brief. **Fix it at the source in this
+     same reconcile** — a correction that stays in one envelope reaches nobody, which is
+     how a false belief survives for weeks.
+
+5. **Propagate impact.** Run the `/impact` procedure over `changes.behavior`,
    `changes.interfaces`, `assumptions_invalidated`, and newly committed decisions,
    seeded with the envelope's `affected_work`. Then act by status class:
    - **backlog / queued** → edit the item's description, `decisions`, and acceptance
@@ -57,18 +69,18 @@ all `.ai/state/`, `.ai/decisions/`, and tracker-status writes happen here (and i
    - **done** → judge whether the change invalidates its result; if yes, set
      `reopened` with a note naming the trigger.
 
-5. **Documentation.** For each `documentation_impacts` entry: fix trivially small
+6. **Documentation.** For each `documentation_impacts` entry: fix trivially small
    ones now; otherwise create/refresh a DOC work item naming exactly what must change.
 
-6. **Cleanup & discovery.** Execute `cleanup`: move obsoleted artifacts to
+7. **Cleanup & discovery.** Execute `cleanup`: move obsoleted artifacts to
    `.ai/archive/` (mirroring their path) — archive, don't delete. Create work items
    from `discovered_work` with suggested priorities.
 
-7. **Questions.** Append the envelope's `questions` to `.ai/state/questions.yaml`
+8. **Questions.** Append the envelope's `questions` to `.ai/state/questions.yaml`
    (assign Q ids). If any is blocking, or three or more are open, run `/questions`
    to refresh the inbox.
 
-8. **Close the transaction.**
+9. **Close the transaction.**
    - Set the work item's status from the envelope (`done` for completed, etc.).
    - Release the lease (`state: released`) and archive acknowledged invalidations.
    - Move the envelope to `.ai/envelopes/processed/`.
@@ -221,6 +233,37 @@ rather than colliding, which is luck, not a system.
 Same rule for merge order. When two in-flight branches touch one generated or shared file
 (`types/database.ts` is the recurring case), merge them in a deliberate order and TELL the
 later one its file moved. Do not let the second discover it as a conflict.
+
+## If merging deploys, the schema change goes first — and it is YOURS to apply
+
+Project Control owns this, not the worker. `operations.md`'s single-writer rule already
+says external writes happen only in `/reconcile` and `/bootstrap`, and applying a schema
+change to a live system is the most consequential external write there is. A worker
+authors the migration inside its lease; **you apply it.** Two engineers with disjoint
+reserved filename prefixes still share one database — prefix reservation coordinates
+names, not application.
+
+**Find out whether merging deploys, cheaply and once.** Read the CI configuration for a
+job triggered by a push to the default branch; if the platform exposes a deployment list,
+compare the last few deploy times against the merges above them. Record the answer in
+`PROJECT.md` so nobody re-derives it. Two published documents disagreeing about this is
+common — prefer what the pipeline actually does.
+
+If merging deploys, then **apply the schema change before you merge the code that reads
+it.** Otherwise you ship a product that queries a column which does not exist, in the
+window before anyone looks.
+
+Three habits, none of them stack-specific:
+
+- **Count before you destroy.** A migration that deletes rows with no resolvable parent
+  gets run against a count first. One such delete turned out to affect zero rows — which
+  is what made it safe, and was not knowable without asking.
+- **Confirm by reading the system's own catalog**, not by trusting the tool's success
+  response. Ask the database (or the service) what it now contains.
+- **Audit drift in both directions, periodically.** A table-level comparison cannot see a
+  migration that only adds a function, a constraint or a policy. In one project three
+  migrations had never been applied, two of them invisible to a table diff, and one would
+  have refused every login the moment a dependent ticket merged.
 
 ## Before you record a defect as closed
 

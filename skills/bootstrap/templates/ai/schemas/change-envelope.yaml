@@ -64,3 +64,17 @@ cleanup:
 verification:
   - tests_passed
   - lint_passed
+
+# What you did NOT execute. Not failure — see /finish-work's hard rules. Project Control
+# reads this at reconcile step 4 and decides, per entry, whether it can close.
+not_proven:
+  - "the deployed endpoint — proven in-process against the real handler, never against a
+     running deployment"
+
+# Claims the BRIEF made that turned out false. Quoted, with what is actually true and how
+# you know. Project Control propagates these at reconcile step 4 and fixes the source —
+# a correction that stays in one envelope reaches nobody.
+brief_corrections:
+  - claim: "the per-channel preference key is already applied in production"
+    actual: "still the old two-column key; verified by querying the live constraint"
+    source_to_fix: "the decision record says active; it is accepted-but-unimplemented"

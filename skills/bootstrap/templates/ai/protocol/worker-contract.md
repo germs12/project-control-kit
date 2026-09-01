@@ -19,6 +19,10 @@ VERIFY CONTEXT VERSION
     │  Note the context_version in your brief. Check .ai/invalidations/
     │  for a notice addressed to your lease before you start.
     ▼
+CHECK THE BRIEF'S LOAD-BEARING CLAIMS
+    │  Your brief asserts things about the system. Check the cheap ones
+    │  BEFORE you build on them (rule 9). Report, don't re-scope.
+    ▼
 EXECUTE
     │  Do the work within your task scope.
     ▼
@@ -58,30 +62,27 @@ RECONCILIATION (Project Control's job, not yours)
 8. **Verify before you report.** Run the checks appropriate to your role (tests, lint,
    link checks, fact checks) and record results in `verification`.
 
-## Your brief is a claim, not a record
+9. **Your brief is a claim, not a record — check the cheap parts before you build.**
+   It tells you what someone believed when they wrote it. They may have been reading
+   state that has since moved, a spec that was never implemented, or their own memory.
+   Briefs in real use have asserted — wrongly — that a database key was applied, that an
+   environment variable was unset, and that a domain pointed at a third party. Each was
+   caught only because a worker checked instead of believing.
 
-The brief tells you what someone believed about the system when they wrote it. They may
-have been reading state that has since moved, or a spec that was never implemented, or
-their own memory.
+   **Cheap means: one command, no writes, under a minute** — and only for claims your
+   objective or acceptance criteria actually depend on. Do not audit the project.
 
-Briefs in real use have asserted — wrongly — that a database key was already applied, that
-an environment variable was unset, and that a domain pointed at a third party. Every one
-was caught only because the worker checked instead of believing, and one of those wrong
-beliefs had suppressed an entire feature for weeks.
+   When a claim is false, **rule 2 still governs.** Put it in the envelope's
+   `brief_corrections` and either build against reality if that is obviously within
+   scope, or raise a **blocking** question (rule 4) and stop. Reporting a false premise
+   is not scope creep; silently rebuilding the ticket around it is.
 
-**Check the cheap facts before you build on them.** Query the table, `curl` the host, read
-the running function. When the brief is wrong, say so plainly in your envelope and build
-against reality — that is not scope creep, it is the job, and the correction is usually
-worth more than the ticket.
+10. **Say what you EXECUTED and what you only ASSERTED — within your role's tools.**
+   Where a mutation makes sense, mutate the fix back and watch it go red; a test that
+   passes with and without your change is testing nothing. Commit your real work first
+   and mutate in a scratch copy — never leave a mutation staged.
 
-## Say what you EXECUTED and what you only ASSERTED
-
-Two sentences that make an envelope trustworthy, and their absence is why work gets
-re-checked by hand:
-
-- **Mutate every fix back and watch it go red.** A test that passes with and without your
-  change is testing nothing.
-- **Write `NOT PROVEN`, in those words, for anything you did not run.** A scaffold that
-  typechecks is not a running app. Reading SQL is not executing it. Naming the gap costs
-  nothing; hiding it means the first person to find out is a customer.
-
+   Whatever you did not run goes in the envelope's `not_proven`, in those words.
+   **This is not failure.** A role without a shell is expected to have entries there and
+   still file `completed`, because it verified everything its tools allow. `/finish-work`
+   step 3 has the detail, including the classes of change where mutation does not apply.

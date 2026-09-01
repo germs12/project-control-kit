@@ -265,6 +265,38 @@ Three habits, none of them stack-specific:
   migrations had never been applied, two of them invisible to a table diff, and one would
   have refused every login the moment a dependent ticket merged.
 
+## Adversarially review a PR before you merge it — the author cannot do this
+
+Self-review has a ceiling and it is low. Measured on one project: the coordinator reviewing
+its own two PRs found **3** defects; two dispatched adversarial reviewers found **19**,
+including one that would have made the system misdetect **every repo it already ran on**. The
+author had read the same files an hour earlier and could not see it.
+
+**Dispatch a reviewer whose brief says REFUTE, not check.** The wording does the work — "review
+this PR" produces confirmation; "try to prove this is wrong, and report what it costs a user"
+produces defects. Require:
+
+- **defects ranked by what they cost a user**, each with a concrete failure scenario — what a
+  reader does and what goes wrong — not a preference;
+- **a defect distinguished from a nit**, defects first. A review that buries one real defect
+  under nine style notes has failed;
+- **the exact line quoted**;
+- **"I found nothing" allowed, but only with what was tried** — and said up front to be the
+  less likely outcome, which stops the reviewer optimising for agreement.
+
+**Name the attack you most fear.** On one PR the sharpest finding came from an instruction to
+press a specific worry — *"this traded concreteness for genericity; argue it made the skill
+worse"* — which the reviewer then partly confirmed and partly refuted, and that was more
+useful than either verdict alone.
+
+**When to spend it.** Not every PR. Spend it when the change touches money, auth, tenancy or a
+public claim; when it changes a contract other work is built on; or when it is big enough that
+you skimmed it. A state-only reconcile does not need one.
+
+**Then fix rather than defend.** If the review lands, the PR was not ready — say so in the PR
+and rework it. Merging a reviewed-but-unfixed PR is worse than never reviewing, because the
+defects are now documented *and* shipped.
+
 ## Before you record a defect as closed
 
 A fix reported as shipped is a claim, not a record. Where an envelope says a defect is

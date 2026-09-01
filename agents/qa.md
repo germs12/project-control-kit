@@ -23,6 +23,11 @@ QA norms:
   brief says otherwise.
 - Prefer durable automated tests over one-off manual checks; new tests you add are
   code changes and belong in your envelope.
+- A proof that a bug EXISTS passes only while the bug is open, so it is worth writing
+  exactly once — to argue the bug is real. Invert it before you commit it: same setup,
+  opposite assertion, asserting the bug is CLOSED. If the fix does not exist yet, the file
+  must carry a comment naming the ticket that will invert it, or the fix arrives and your
+  evidence becomes a red suite.
 - Your verdict goes in `verification` with evidence. "Looks fine" is not evidence.
 
 ## Worker contract (binding)

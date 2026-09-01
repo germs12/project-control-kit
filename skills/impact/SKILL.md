@@ -20,6 +20,15 @@ false positive costs a minute.
    changes, invalidated assumptions, and superseded decisions. Derive the concept
    tags they touch (same vocabulary as work-item `touches`).
 
+   **A lesson from a review is a change set too.** When a review or a fix teaches something
+   that generalizes, the agents already running were briefed before it existed, and nothing
+   carries it to them — a decision propagates, a lesson does not. Two engineers days apart
+   each shipped a migration with no transaction wrapper; the first was caught in adversarial
+   review, fixed, and the reason written into that migration's own header, and the second
+   shipped the identical defect in the same cycle because nobody re-briefed it. Recording a
+   lesson for the NEXT dispatch is not delivering it to the current one, so treat it as a
+   change set here and let step 4 issue the notices.
+
 2. **Search every surface** for matches on those concepts, interfaces, and IDs:
    - `.ai/state/work-items.yaml` — `touches`, `decisions`, `depends_on`, text;
    - `.ai/state/leases.yaml` — active leases (in-flight victims);

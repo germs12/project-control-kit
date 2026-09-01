@@ -23,7 +23,9 @@ explain the present, say so; that's a `/health` finding.
    `.ai/envelopes/processed/`.
 2. If `.ai/envelopes/pending/` is non-empty, lead with that: the briefing is
    stale until `/reconcile` runs — offer to run it first.
-3. Render the briefing. Keep it under ~30 lines; link IDs, don't restate bodies.
+3. Render the briefing. Keep it under ~30 lines; link IDs, don't restate bodies. Say
+   `merged` or `deployed` and never let one imply the other — whether a merge reaches
+   production is a fact about the pipeline, established once per repo (see `/reconcile`).
 
 ## Briefing format
 
@@ -31,7 +33,7 @@ explain the present, say so; that's a `/health` finding.
 STATUS — <project> — <date>   (context v<CV>)
 
 LANDED since last briefing
-  <item> — one line of what changed (from envelope summaries)
+  <item> — one line of what changed (from envelope summaries) — merged | deployed
 
 IN FLIGHT
   <item> — <agent> — started <when> — <one-line brief>   [⚠ unacked INV-<id> if any]

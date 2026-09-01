@@ -27,7 +27,11 @@ all `.ai/state/`, `.ai/decisions/`, and tracker-status writes happen here (and i
 
 3. **Commit decisions — and assign their ids yourself.** A proposed id is a worker's
    guess, not an address. **Before writing any decision file, collect the proposed ids
-   across ALL pending envelopes and look for duplicates.** Parallel workers each read the
+   across ALL pending envelopes and look for duplicates — then check each one against
+   `.ai/decisions/active/` too.** An id that ALREADY RESOLVES is the worse case, because
+   nothing dangles: the citation lands on somebody else's decision, and the rule actually
+   proposed ships under no id at all. An id is available only when it is UNALLOCATED;
+   existing is not the same as being the right record. Parallel workers each read the
    highest id in use and pick the next, so simultaneous dispatch reliably produces two
    different decisions under one id; this has happened four times in a single session
    (`DATA-005`, `OPS-005`, `SITE-007`, `BRAND-004`/`BRAND-005`). Renumber by proposal
@@ -249,6 +253,14 @@ compare the last few deploy times against the merges above them. Record the answ
 `PROJECT.md` so nobody re-derives it. Two published documents disagreeing about this is
 common — prefer what the pipeline actually does.
 
+**Then say which one you mean, every time.** "Merged" and "deployed" are facts about
+different systems, and the absence of a deploy job is an answer as good as any: one listing
+of the CI directory and one look at each trigger settles it, where no document does. A
+coordinator here told its human twice that merges auto-deploy, in a repo whose CI has no
+deploy job at all and whose deploys are a manual command. The cost ran both ways — ordinary
+merges looked dangerous, and a merged security fix read as live in production when nothing
+had shipped it.
+
 If merging deploys, then **apply the schema change before you merge the code that reads
 it.** Otherwise you ship a product that queries a column which does not exist, in the
 window before anyone looks.
@@ -296,6 +308,31 @@ you skimmed it. A state-only reconcile does not need one.
 **Then fix rather than defend.** If the review lands, the PR was not ready — say so in the PR
 and rework it. Merging a reviewed-but-unfixed PR is worse than never reviewing, because the
 defects are now documented *and* shipped.
+
+**And push what the review taught to the agents already running.** A lesson recorded for the
+next dispatch does not reach a peer mid-task; that is an invalidation, via `/impact`.
+
+## A proof that a bug EXISTS becomes a test that fails when the bug is FIXED
+
+An adversarial proof is written to argue a vulnerability is real, so every case in it passes
+only while the vulnerability is open. Its value expires the moment the argument is won —
+and merging it beside its own fix turns `main` red, with test names asserting the defect is
+still there.
+
+Caught once by reading test names in a merge wave: five cases named `EXPOSES every tenant's
+consent records` and `lets that actor CLEAR another tenant's STOP`, in a PR queued next to
+the PR fixing exactly that leak. Nothing mechanical would have found it. Each branch was
+green alone; CI cannot see the contradiction until both are on the same branch, which is
+after the first merge.
+
+So:
+
+- **Invert the proof before it is committed.** Same setup, opposite assertion — the test
+  asserts the bug is CLOSED, and its name says so.
+- **If a proof must land before its fix exists**, the file carries a comment naming the
+  ticket that will invert it. A proof without one is a defect armed by its own fix.
+- **Merging a fix and its proof in the same wave is a check you do by hand.** Read the test
+  names in the diff, not the file list.
 
 ## Before you record a defect as closed
 

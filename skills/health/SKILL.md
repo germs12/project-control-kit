@@ -34,7 +34,7 @@ Decisions
 - no active work item, state file, or doc references a superseded decision ID
 - every decision in `decisions/superseded/` has `status: superseded`
 
-Decision debt — the two checks that catch reconcile failing silently
+Decision debt — the three checks that catch reconcile failing silently
 - **every processed envelope's `decisions_created` resolves to a file.** Reconcile's
   contract is: write each accepted decision, THEN move the envelope. Doing the second
   without the first is silent and total — the envelope looks done and the reasoning is
@@ -48,11 +48,19 @@ Decision debt — the two checks that catch reconcile failing silently
   are UNALLOCATED need an allowlist, and every entry must re-earn its place: if one later
   gets a record, the stale entry fails.
 
-  When either fires, **look in the processed envelope before writing anything.** The
-  original proposal is still there. Reconstructing a record from the places that cite it
-  produces a confidently WRONG rule, because a citation usually names a decision's
+  When either of the first two fires, **look in the processed envelope before writing
+  anything.** The original proposal is still there. Reconstructing a record from the places
+  that cite it produces a confidently WRONG rule, because a citation usually names a decision's
   CONSEQUENCE rather than the decision — observed twice, once caught only by recovering
   the original.
+- **every id an envelope PROPOSED holds the decision it proposed.** Both checks above ask
+  whether an id resolves; neither asks whether it resolves to the right thing. A worker that
+  proposes an id already taken by a different decision produces a hit — the check sees it and
+  moves on — so the proposed rule reaches shipped code under no id at all and nothing will
+  ever flag it. Compare each processed envelope's `decisions_created` title against the title
+  of the record under that id, and fail on a mismatch. A dangling reference is loud; a
+  collision is silent, and it is a separate defect class. Two rules went missing this way on
+  the same day the two checks above shipped and correctly caught three dangling ids.
 
 Envelopes & invalidations
 - `.ai/envelopes/pending/` is empty (anything sitting there is unreconciled work)
